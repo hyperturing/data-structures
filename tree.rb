@@ -12,33 +12,57 @@ class Tree
 
     middle_index = (start_index + end_index) / 2
 
-    root_node = Node.new(array[middle_index])
-    root_node.left_node = build_tree(array, start_index, middle_index - 1)
-    root_node.right_node = build_tree(array, middle_index + 1, end_index)
-    root_node
+    current_node = Node.new(array[middle_index])
+    current_node.left_node = build_tree(array, start_index, middle_index - 1)
+    current_node.right_node = build_tree(array, middle_index + 1, end_index)
+    current_node
   end
 
-  def preorder(current_root = @root)
-    return if  current_root.nil?
-
-    yield current_root.value
-    preorder(current_root.left_node) { |value| yield value }
-    preorder(current_root.right_node) { |value| yield value }
+  def insert(value, current_node = @root)
+    case current_node.value <=> value
+    when 0
+      puts 'Duplicate value, stopping'
+    when 1
+      current_node.left_node.nil? ? current_node.left_node = Node.new(value) : insert(value, current_node.left_node)
+    when -1
+      current_node.right_node.nil? ? current_node.right_node = Node.new(value) : insert(value, current_node.right_node)
+    end
   end
 
-  def inorder(current_root = @root)
-    return if current_root.nil?
+  def preorder(current_node = @root)
+    return if  current_node.nil?
 
-    preorder(current_root.left_node) { |value| yield value }
-    yield current_root.value
-    preorder(current_root.right_node) { |value| yield value }
+    yield current_node.value
+    preorder(current_node.left_node) { |value| yield value }
+    preorder(current_node.right_node) { |value| yield value }
   end
 
-  def postorder(current_root = @root)
-    return if current_root.nil?
+  def inorder(current_node = @root)
+    return if current_node.nil?
 
-    preorder(current_root.left_node) { |value| yield value }
-    preorder(current_root.right_node) { |value| yield value }
-    yield current_root.value
+    preorder(current_node.left_node) { |value| yield value }
+    yield current_node.value
+    preorder(current_node.right_node) { |value| yield value }
+  end
+
+  def postorder(current_node = @root)
+    return if current_node.nil?
+
+    preorder(current_node.left_node) { |value| yield value }
+    preorder(current_node.right_node) { |value| yield value }
+    yield current_node.value
+  end
+
+  def find(value, current_node = @root)
+    return nil if current_node.nil?
+
+    case current_node.value <=> value
+    when 1
+      find(value, current_node.left_node)
+    when -1
+      find(value, current_node.right_node)
+    when 0
+      current_node
+    end
   end
 end

@@ -6,7 +6,7 @@ class Node
     @left_node = @right_node = nil
   end
 
-  def <=>(other)
-    @value <=> other.value
+  def is_leaf?
+    self.left_node.nil? && self.right_node.nil?
   end
 end
