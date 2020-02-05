@@ -1,14 +1,58 @@
 require_relative 'tree'
 
-tree = Tree.new([1, 5, 7, 2, 9])
+def print_all_traversals(tree)
+  puts "\nlevelorder tree traversal:"
+  tree.levelorder { |value| puts value }
+  puts "\npreorder tree traversal:"
+  tree.preorder { |value| puts value }
+  puts "\npostorder tree traversal:"
+  tree.postorder { |value| puts value }
+  puts "\ninorder tree traversal:"
+  tree.inorder { |value| puts value }
+end
 
-tree.preorder { |value| puts value}
-puts ''
+def print_menu
+  puts <<~HEREDOC
+    \n1. Create a binary search tree from an array of random numbers (`Array.new(15) { rand(1..100) }`)
+    2. Confirm that the tree is balanced by calling `#balanced?`
+    3. Print out all elements in level, pre, post, and in order
+    4. try to unbalance the tree by adding several numbers > 100
+    5. Confirm that the tree is unbalanced by calling `#balanced?`
+    6. Balance the tree by calling `#rebalance!`
+    7. Confirm that the tree is balanced by calling `#balanced?`
+    8. Print out all elements in level, pre, post, and in order
+    9. Exit\n
+  HEREDOC
+end
 
-#puts tree.find(7).value
-
-tree.insert(4)
-tree.insert(5)
-
-tree.preorder { |value| puts value}
-puts ''
+step = 0
+print_menu
+until step == 9
+  case step
+  when 1
+    tree = Tree.new(Array.new(4) { rand(1..100) })
+    puts 'Tree created!!'
+  when 2
+    puts tree.balanced? ? 'Balanced!' : 'Not balanced!'
+  when 3
+    print_all_traversals(tree)
+  when 4
+    20.times do
+      tree.insert(rand(150..500))
+    end
+    puts 'Inserted a whole bunch of random numbers in the tree'
+  when 5
+    puts tree.balanced? ? 'Balanced!' : 'Not balanced!'
+  when 6
+    puts 'Rebalancing tree'
+    tree.rebalance
+  when 7
+    puts tree.balanced? ? 'Balanced!' : 'Not balanced!'
+  when 8
+    print_all_traversals(tree)
+  end
+  puts "\nPress enter to continue"
+  gets
+  print_menu
+  step += 1
+end

@@ -18,6 +18,11 @@ class Tree
     current_node
   end
 
+  def rebalance
+    levelorder_array = levelorder
+    @root = build_tree(levelorder_array, 0, levelorder_array.size - 1)
+  end
+
   def insert(value, current_node = @root)
     case current_node.value <=> value
     when 0
@@ -51,6 +56,42 @@ class Tree
     preorder(current_node.left_node) { |value| yield value }
     preorder(current_node.right_node) { |value| yield value }
     yield current_node.value
+  end
+
+  def levelorder(current_node = @root, level_array = [], queue = [])
+    return if current_node.nil?
+
+    queue.push(current_node)
+    level_array.push(current_node.value)
+    until queue.empty?
+      node_to_print = queue.pop
+
+      yield node_to_print.value if block_given?
+      levelorder(node_to_print.left_node, level_array) { |value| yield value if block_given? }
+      levelorder(node_to_print.right_node, level_array) { |value| yield value if block_given? }
+    end
+    level_array
+  end
+
+  def depth(current_node = @root)
+    if current_node.nil?
+      0
+    else
+      [depth(current_node.left_node), depth(current_node.right_node)].max + 1
+    end
+  end
+
+  def balanced?(current_node = @root)
+    if current_node.nil?
+      true
+    else
+      right_depth = depth(current_node.left_node)
+      left_depth = depth(current_node.right_node)
+
+      balanced?(current_node.left_node) &&
+        balanced?(current_node.right_node) &&
+        (right_depth - left_depth) <= 1
+    end
   end
 
   def find(value, current_node = @root)
