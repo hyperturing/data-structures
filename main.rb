@@ -30,7 +30,7 @@ print_menu
 until step == 9
   case step
   when 1
-    tree = Tree.new(Array.new(4) { rand(1..100) })
+    tree = Tree.new(Array.new(10) { rand(1..100) })
     puts 'Tree created!!'
   when 2
     puts tree.balanced? ? 'Balanced!' : 'Not balanced!'
@@ -56,3 +56,13 @@ until step == 9
   print_menu
   step += 1
 end
+
+found_value = -1
+until found_value.positive?
+  guess = rand(1..100)
+  found_value = guess if tree.find(guess) && tree.find(guess).number_of_children > 1
+end
+
+puts "Deleting #{found_value} from our tree"
+tree.delete(found_value)
+print_all_traversals(tree)

@@ -6,7 +6,11 @@ class Node
     @left_node = @right_node = nil
   end
 
-  def leaf?
-    left_node.nil? && right_node.nil?
+  def number_of_children
+    if left_node.nil? && right_node.nil?
+      0
+    else
+      left_node.nil? || right_node.nil? ? 1 : 2
+    end
   end
 end

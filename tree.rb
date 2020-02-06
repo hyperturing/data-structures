@@ -34,6 +34,31 @@ class Tree
     end
   end
 
+  def delete(value)
+    node = find(value)
+    if node.nil?
+      puts "#{value} not in tree"
+    else
+      case node.number_of_children
+      when 0
+        node = nil
+      when 1
+        if node.left_node.nil?
+          node.value = node.right_node.value
+          node.right_node = nil
+        else
+          node.value = node.left_node.value
+          node.left_node = nil
+        end
+      when 2
+        successor_node = minimum(node.right_node)
+        node.value = successor_node.value
+        successor_node = nil
+      end
+    end
+    GC.start
+  end
+
   def preorder(current_node = @root)
     return if  current_node.nil?
 
@@ -105,5 +130,9 @@ class Tree
     when 0
       current_node
     end
+  end
+
+  def minimum(current_node = @root)
+    current_node.number_of_children < 1 ? current_node : minimum(current_node.left_node)
   end
 end
