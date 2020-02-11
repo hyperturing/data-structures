@@ -8,9 +8,13 @@ def knight_moves(start_move, end_move)
   visited = [start_move]
 
   until node_queue.empty?
+    # Queue and traverse each possible move
+    #   Before moving onto the next move
     node = node_queue.pop
     moves = get_legal_moves(node.position['x'], node.position['y'], BOARD_SIZE)
     moves.each do |move|
+      # Push the space to the queue if not already visited
+      #   Record the space's parent and distance from start
       next if visited.include?(move)
 
       move_node = Node.new(move)
@@ -24,6 +28,9 @@ def knight_moves(start_move, end_move)
 end
 
 def get_legal_moves(row, column, board_size)
+  # Returns an array of valid moves for the knight piece
+  #   Use the knight piece's move pattern
+  #   and filter out moves that leave the board
   move_offsets = [[2, -1], [1, -2], [1, 2], [2, 1],
                   [-1, -2], [-2, -1], [-1, 2], [-2, 1]]
   moves = move_offsets.each do |offset|
@@ -45,9 +52,14 @@ def traverse_path(node)
 end
 
 def message(node)
+  # Note: The path currently prints out in reverse order
   puts "You made it in #{node.distance} moves! Here's your path:"
   puts node.print_position
   traverse_path(node.parent_nodes)
+  puts
 end
 
 knight_moves([0, 0], [4, 3])
+knight_moves([0, 0], [1, 2])
+knight_moves([0, 0], [3, 3])
+knight_moves([3, 3], [0, 0])
